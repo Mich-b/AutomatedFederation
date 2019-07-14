@@ -106,9 +106,6 @@
             "apiVersion": "2019-02-01",
             "name": "[variables('NicName')]",
             "location": "[parameters('location')]",
-            "dependsOn": [
-                "VNet"
-            ],
             "properties": {
                 "ipConfigurations": [
                     {
