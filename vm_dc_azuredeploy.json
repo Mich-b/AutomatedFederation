@@ -51,13 +51,13 @@
     "variables": {
         "virtualNetworkName": "internalNet",
         "virtualNetworkAddressRange": "10.0.0.0/16",
-        "adNicName": "adNic",
-        "adNicIPAddress": "10.0.0.4",
-        "adVMName": "adVM",
-        "adSubnetName": "adSubnet",
-        "adSubnetAddressPrefix": "10.0.0.0/24",
+        "NicName": "adNic",
+        "NicIPAddress": "10.0.0.4",
+        "VMName": "adVM",
+        "SubnetName": "internalSubnet",
+        "SubnetAddressPrefix": "10.0.0.0/24",
         "publicIPAddressName": "adPublicIP",
-        "networkSecurityGroupName": "internalNetwork"
+        "networkSecurityGroupName": "internalSecurityGrup"
     },
     "resources": [
         {
@@ -93,10 +93,10 @@
                         "value": "[variables('virtualNetworkAddressRange')]"
                     },
                     "subnetName": {
-                        "value": "[variables('adSubnetName')]"
+                        "value": "[variables('SubnetName')]"
                     },
                     "subnetRange": {
-                        "value": "[variables('adSubnetAddressPrefix')]"
+                        "value": "[variables('SubnetAddressPrefix')]"
                     },
                     "location": {
                         "value": "[parameters('location')]"
@@ -107,7 +107,7 @@
         {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2019-02-01",
-            "name": "[variables('adNicName')]",
+            "name": "[variables('NicName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
                 "VNet"
@@ -121,9 +121,9 @@
                                 "id": "[resourceId ('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
                               },
                             "privateIPAllocationMethod": "Static",
-                            "privateIPAddress": "[variables('adNicIPAddress')]",
+                            "privateIPAddress": "[variables('NicIPAddress')]",
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('adSubnetName'))]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('SubnetName'))]"
                             }
                         }
                     }
@@ -133,17 +133,17 @@
         {
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2019-03-01",
-            "name": "[variables('adVMName')]",
+            "name": "[variables('VMName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[variables('adNicName')]"
+                "[variables('NicName')]"
             ],
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "[parameters('vmSize')]"
                 },
                 "osProfile": {
-                    "computerName": "[variables('adVMName')]",
+                    "computerName": "[variables('VMName')]",
                     "adminUsername": "[parameters('adminUsername')]",
                     "adminPassword": "[parameters('adminPassword')]"
                 },
@@ -155,7 +155,7 @@
                         "version": "latest"
                     },
                     "osDisk": {
-                        "name": "[concat(variables('adVMName'),'_OSDisk')]",
+                        "name": "[concat(variables('VMName'),'_OSDisk')]",
                         "caching": "ReadOnly",
                         "createOption": "FromImage",
                         "managedDisk": {
@@ -164,7 +164,7 @@
                     },
                     "dataDisks": [
                         {
-                            "name": "[concat(variables('adVMName'), '_DataDisk')]",
+                            "name": "[concat(variables('VMName'), '_DataDisk')]",
                             "caching": "ReadWrite",
                             "createOption": "Empty",
                             "diskSizeGB": 20,
@@ -178,7 +178,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('adNicName'))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('NicName'))]"
                         }
                     ]
                 }
@@ -190,7 +190,7 @@
                     "name": "CreateADForest",
                     "location": "[parameters('location')]",
                     "dependsOn": [
-                        "[variables('adVMName')]"
+                        "[variables('VMName')]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Powershell",
@@ -219,7 +219,7 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2018-11-01",
+            "apiVersion": "2015-01-01",
             "name": "UpdateVNetDNS",
             "dependsOn": [
                 "CreateADForest"
@@ -238,14 +238,14 @@
                         "value": "[variables('virtualNetworkAddressRange')]"
                     },
                     "subnetName": {
-                        "value": "[variables('adSubnetName')]"
+                        "value": "[variables('SubnetName')]"
                     },
                     "subnetRange": {
-                        "value": "[variables('adSubnetAddressPrefix')]"
+                        "value": "[variables('SubnetAddressPrefix')]"
                     },
                     "DNSServerAddress": {
                         "value": [
-                            "[variables('adNicIPAddress')]"
+                            "[variables('NicIPAddress')]"
                         ]
                     },
                     "location": {
