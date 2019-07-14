@@ -184,7 +184,7 @@
         "name": "[concat(parameters('dnsPrefix'),'/joindomain')]",
         "location": "[parameters('location')]",
         "dependsOn": [
-          "[concat('Microsoft.Compute/virtualMachines/', parameters('dnsPrefix'))]"
+          "[concat('Microsoft.Compute/virtualMachines/', variables('VMName'))]"
         ],
         "properties": {
           "publisher": "Microsoft.Compute",
