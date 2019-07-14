@@ -82,11 +82,12 @@
       }
     },
     "variables": {
+     "virtualNetworkName": "[parameters('virtualNetworkName')]",
      "NicName": "adfsNic",
      "publicIPAddressName": "adfsPublicIP",
      "VMName": "adfsVM",
      "NicIPAddress": "10.0.0.5",
-    "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('adSubnetName'))]"
+    "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), parameters('adSubnetName'))]"
     },
     "resources": [
         {
