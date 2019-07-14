@@ -88,7 +88,7 @@
      "VMName": "adfsVM",
      "NicIPAddress": "10.0.0.5",
      "subnetName": "[parameters('subnetName')]",
-    "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), parameters('adSubnetName'))]"
+    "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), parameters('subnetName'))]"
     },
     "resources": [
         {
