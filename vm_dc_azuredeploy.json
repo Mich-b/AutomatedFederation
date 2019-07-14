@@ -23,7 +23,7 @@
         "dnsPrefix": {
             "type": "string",
             "metadata": {
-                "description": "The DNS prefix for the public IP address used by the Load Balancer"
+                "description": "The DNS prefix for the public IP address"
             }
         },
         "vmSize": {
@@ -110,14 +110,16 @@
             "name": "[variables('adNicName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "VNet",
-                "[variables('adLBName')]"
+                "VNet"
             ],
             "properties": {
                 "ipConfigurations": [
                     {
                         "name": "ipconfig1",
                         "properties": {
+                            "publicIPAddress": {
+                                "id": "[resourceId ('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
+                              },
                             "privateIPAllocationMethod": "Static",
                             "privateIPAddress": "[variables('adNicIPAddress')]",
                             "subnet": {
