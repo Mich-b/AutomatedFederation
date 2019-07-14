@@ -23,3 +23,6 @@ New-AzResourceGroup -Name AutomatedFederation -Location westeurope
 
 New-AzResourceGroupDeployment -ResourceGroupName AutomatedFederation -TemplateUri https://raw.githubusercontent.com/Mich-b/AutomatedFederation/master/vm_dc_azuredeploy.json
 ```
+
+## Troubleshooting
+- make sure the domain name contains more than 3 characters
