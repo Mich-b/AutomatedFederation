@@ -9,7 +9,7 @@
           "description": "Existing VNET that contains the domain controller"
         }
       },
-      "adSubnetName": {
+      "subnetName": {
         "type": "string",
         "defaultValue": "internalSubnet",
         "metadata": {
@@ -87,6 +87,7 @@
      "publicIPAddressName": "adfsPublicIP",
      "VMName": "adfsVM",
      "NicIPAddress": "10.0.0.5",
+     "subnetName": "[parameters('subnetName')]",
     "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), parameters('adSubnetName'))]"
     },
     "resources": [
@@ -118,7 +119,7 @@
                             "privateIPAllocationMethod": "Static",
                             "privateIPAddress": "[variables('NicIPAddress')]",
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('adSubnetName'))]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]"
                             }
                         }
                     }
